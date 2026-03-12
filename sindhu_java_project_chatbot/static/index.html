@@ -1,0 +1,275 @@
+<!-- <!DOCTYPE html>
+<html>
+<head>
+    <title>Java Search Chatbot</title>
+    <style>
+        body {
+            font-family: Arial;
+            background: #f0f0f0;
+            padding: 0;
+            margin: 0;
+        }
+        #chatbox {
+            width: 100%;
+            max-width: 600px;
+            margin: auto;
+            background: white;
+            height: 85vh;
+            box-shadow: 0 0 10px #aaa;
+            padding: 20px;
+            overflow-y: auto;
+        }
+        .msg-user {
+            text-align: right;
+            padding: 10px;
+            margin: 10px;
+            background: #0084ff;
+            color: white;
+            display: inline-block;
+            border-radius: 10px;
+        }
+        .msg-bot {
+            text-align: left;
+            padding: 10px;
+            margin: 10px;
+            background: #e8e8e8;
+            display: inline-block;
+            border-radius: 10px;
+        }
+        #inputArea {
+            width: 100%;
+            display: flex;
+            justify-content: center;
+            margin-top: 10px;
+        }
+        input {
+            width: 75%;
+            padding: 10px;
+            font-size: 16px;
+        }
+        button {
+            width: 20%;
+            padding: 10px;
+            font-size: 16px;
+            background: #0084ff;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
+    </style>
+</head>
+
+<body>
+<h2 style="text-align:center;">Java Search Chatbot</h2>
+
+<div id="chatbox"></div>
+
+<div id="inputArea">
+    <input id="msg" placeholder="Ask me anything...">
+    <button onclick="sendMessage()">Send</button>
+</div>
+
+<script>
+function sendMessage() {
+    let msg = document.getElementById("msg").value;
+    if(msg.trim() === "") return;
+
+    // Show user message
+    document.getElementById("chatbox").innerHTML += 
+        `<div class='msg-user'>${msg}</div>`;
+
+    fetch("/", {
+        method: "POST",
+        body: msg
+    })
+    .then(res => res.text())
+    .then(bot => {
+        document.getElementById("chatbox").innerHTML += 
+            `<div class='msg-bot'>${bot}</div>`;
+        document.getElementById("msg").value = "";
+        document.getElementById("chatbox").scrollTop =
+            document.getElementById("chatbox").scrollHeight;
+    });
+}
+</script>
+
+</body>
+</html> -->
+<!-- <!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Java Search Chatbot</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <style>
+    body { font-family: Inter, Arial; background:#f2f6fb; margin:0; padding:20px; }
+    .container { max-width:760px; margin:24px auto; background:white; border-radius:10px; box-shadow:0 6px 30px rgba(10,20,30,0.08); padding:18px; }
+    #chat { height: 60vh; overflow:auto; padding:12px; border:1px solid #eee; border-radius:8px; background:#fbfdff; }
+    .bubble { display:inline-block; padding:10px 12px; border-radius:12px; margin:8px 0; max-width:80%; }
+    .user { background:#0b72ff; color:white; float:right; clear:both; }
+    .bot { background:#eef6ff; color:#0b2540; float:left; clear:both; }
+    #controls { display:flex; gap:8px; margin-top:12px; }
+    input[type="text"] { flex:1; padding:10px; font-size:15px; border-radius:8px; border:1px solid #ddd; }
+    button { padding:10px 14px; border-radius:8px; border:none; background:#0b72ff; color:white; font-weight:600; cursor:pointer; }
+    .meta { font-size:12px; color:#6b7280; margin-top:8px; }
+    .clear { clear: both; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Java Search Chatbot</h2>
+    <div id="chat"></div>
+
+    <div id="controls">
+      <input id="q" type="text" placeholder="Ask me anything..." />
+      <button id="send">Send</button>
+    </div>
+
+    <div class="meta">Powered by Tavily (replace API key in ApiConfig.java)</div>
+  </div>
+
+<script>
+const chat = document.getElementById('chat');
+const q = document.getElementById('q');
+const send = document.getElementById('send');
+
+function appendUser(text) {
+  const d = document.createElement('div');
+  d.className = 'bubble user';
+  d.textContent = text;
+  chat.appendChild(d);
+  const c = document.createElement('div'); c.className='clear'; chat.appendChild(c);
+  chat.scrollTop = chat.scrollHeight;
+}
+
+function appendBot(html) {
+  const d = document.createElement('div');
+  d.className = 'bubble bot';
+  // basic simple formatting: keep newlines
+  d.innerText = html;
+  chat.appendChild(d);
+  const c = document.createElement('div'); c.className='clear'; chat.appendChild(c);
+  chat.scrollTop = chat.scrollHeight;
+}
+
+async function ask(text) {
+  appendUser(text);
+  q.value = '';
+  appendBot('Thinking...');
+
+  try {
+    const resp = await fetch('/chat', { method: 'POST', body: text });
+    const json = await resp.json();
+    // replace last 'Thinking...' bubble
+    const bubbles = document.querySelectorAll('.bubble.bot');
+    const last = bubbles[bubbles.length - 1];
+    if (json && json.answer) {
+      last.innerText = json.answer;
+    } else {
+      last.innerText = 'I found results but could not summarize them.';
+    }
+  } catch (e) {
+    const bubbles = document.querySelectorAll('.bubble.bot');
+    const last = bubbles[bubbles.length - 1];
+    last.innerText = 'Network error: ' + e.message;
+  }
+}
+
+send.addEventListener('click', () => {
+  const text = q.value.trim();
+  if (!text) return;
+  ask(text);
+});
+q.addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); send.click(); } });
+</script>
+</body>
+</html> -->
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8" />
+  <title>Java Search Chatbot</title>
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <style>
+    body { font-family: Inter, Arial; background:#f2f6fb; margin:0; padding:20px; }
+    .container { max-width:760px; margin:24px auto; background:white; border-radius:10px; box-shadow:0 6px 30px rgba(10,20,30,0.08); padding:18px; }
+    #chat { height: 60vh; overflow:auto; padding:12px; border:1px solid #eee; border-radius:8px; background:#fbfdff; }
+    .bubble { display:inline-block; padding:10px 12px; border-radius:12px; margin:8px 0; max-width:80%; }
+    .user { background:#0b72ff; color:white; float:right; clear:both; }
+    .bot { background:#eef6ff; color:#0b2540; float:left; clear:both; }
+    #controls { display:flex; gap:8px; margin-top:12px; }
+    input[type="text"] { flex:1; padding:10px; font-size:15px; border-radius:8px; border:1px solid #ddd; }
+    button { padding:10px 14px; border-radius:8px; border:none; background:#0b72ff; color:white; font-weight:600; cursor:pointer; }
+    .meta { font-size:12px; color:#6b7280; margin-top:8px; }
+    .clear { clear: both; }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <h2>Java Search Chatbot</h2>
+    <div id="chat"></div>
+
+    <div id="controls">
+      <input id="q" type="text" placeholder="Ask me anything..." />
+      <button id="send">Send</button>
+    </div>
+
+    <div class="meta">Powered by Tavily (replace API key in ApiConfig.java)</div>
+  </div>
+
+<script>
+const chat = document.getElementById('chat');
+const q = document.getElementById('q');
+const send = document.getElementById('send');
+
+function appendUser(text) {
+  const d = document.createElement('div');
+  d.className = 'bubble user';
+  d.textContent = text;
+  chat.appendChild(d);
+  const c = document.createElement('div'); c.className='clear'; chat.appendChild(c);
+  chat.scrollTop = chat.scrollHeight;
+}
+
+function appendBot(html) {
+  const d = document.createElement('div');
+  d.className = 'bubble bot';
+  // basic simple formatting: keep newlines
+  d.innerText = html;
+  chat.appendChild(d);
+  const c = document.createElement('div'); c.className='clear'; chat.appendChild(c);
+  chat.scrollTop = chat.scrollHeight;
+}
+
+async function ask(text) {
+  appendUser(text);
+  q.value = '';
+  appendBot('Thinking...');
+
+  try {
+    const resp = await fetch('/chat', { method: 'POST', body: text });
+    const json = await resp.json();
+    // replace last 'Thinking...' bubble
+    const bubbles = document.querySelectorAll('.bubble.bot');
+    const last = bubbles[bubbles.length - 1];
+    if (json && json.answer) {
+      last.innerText = json.answer;
+    } else {
+      last.innerText = 'I found results but could not summarize them.';
+    }
+  } catch (e) {
+    const bubbles = document.querySelectorAll('.bubble.bot');
+    const last = bubbles[bubbles.length - 1];
+    last.innerText = 'Network error: ' + e.message;
+  }
+}
+
+send.addEventListener('click', () => {
+  const text = q.value.trim();
+  if (!text) return;
+  ask(text);
+});
+q.addEventListener('keydown', (e) => { if (e.key === 'Enter') { e.preventDefault(); send.click(); } });
+</script>
+</body>
+</html>
